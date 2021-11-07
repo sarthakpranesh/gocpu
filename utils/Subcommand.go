@@ -8,6 +8,7 @@ type Subcommand struct {
 	Fs       *flag.FlagSet
 	Name     string
 	Interval int
+	Turbo    bool
 	Function func(s *Subcommand)
 }
 

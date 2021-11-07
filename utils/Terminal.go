@@ -23,3 +23,11 @@ func SetupCloseHandler() {
 		os.Exit(0)
 	}()
 }
+
+func CmdTerm(c string) {
+	cmd := exec.Command("bash", "-c", c)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Run()
+}
