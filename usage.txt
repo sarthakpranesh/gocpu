@@ -1,4 +1,4 @@
-Usage gocpu [option] [flags]
-Options:
+Usage gocpu [subcommand] [flags]
+Subcommand:
     watch - see the realtime cpu frequency, updated at 2 seconds by default, 
             can be changed using the "--int" flag

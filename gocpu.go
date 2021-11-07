@@ -23,12 +23,14 @@ func main() {
 		),
 	}
 
-	subcommand := os.Args[1]
-	for _, cmd := range cmds {
-		if cmd.Name == subcommand {
-			cmd.Init(os.Args[2:])
-			cmd.Run()
-			return
+	if len(os.Args) > 1 {
+		subcommand := os.Args[1]
+		for _, cmd := range cmds {
+			if cmd.Name == subcommand {
+				cmd.Init(os.Args[2:])
+				cmd.Run()
+				return
+			}
 		}
 	}
 
