@@ -1,47 +1,43 @@
 package main
 
 import (
-	"flag"
+	"Github/sarthakpranesh/gocpu/utils"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
-	"os/signal"
 	"regexp"
 	"strings"
 	"sync"
-	"syscall"
 	"time"
 )
 
-var cmdTypes []string = []string{"watch"}
-
 func main() {
-	// useColor := flag.Bool("color", false, "display colorized output")
-	watchInterval := flag.Int("int", 2, "Usage --int: takes integer value for updating cpu freqency value")
-	flag.Parse()
-	var curCmd string
-	for _, cmd := range cmdTypes {
-		if cmd == flag.Arg(0) {
-			curCmd = cmd
+	var cmds []*utils.Subcommand = []*utils.Subcommand{
+		utils.NewSubCommand(
+			"watch",
+			func(s *utils.Subcommand) {
+				s.Fs.IntVar(&s.Interval, "int", 2, "Usage --int: takes integer value for updating cpu freqency value")
+			},
+			WatchFrequency,
+		),
+	}
+
+	subcommand := os.Args[1]
+	for _, cmd := range cmds {
+		if cmd.Name == subcommand {
+			cmd.Init(os.Args[2:])
+			cmd.Run()
+			return
 		}
 	}
 
-	// if no usage match
-	if curCmd == "" {
-		usage, _ := ioutil.ReadFile("usage.txt")
-		log.Fatalln(string(usage))
-		return
-	}
-
-	// if usage matched
-	if curCmd == "watch" {
-		WatchFrequency(*watchInterval)
-	}
+	usage, _ := ioutil.ReadFile("usage.txt")
+	log.Fatalln(string(usage))
 }
 
-func WatchFrequency(interval int) {
+func WatchFrequency(s *utils.Subcommand) {
+	interval := s.Interval
 	fileInfos, err := ioutil.ReadDir("/sys/devices/system/cpu/")
 	if err != nil {
 		log.Fatalln(err)
@@ -60,7 +56,7 @@ func WatchFrequency(interval int) {
 	var cpuFreq []string = make([]string, len(cpuCores))
 	var wg sync.WaitGroup
 	wg.Add(1)
-	SetupCloseHandler()
+	utils.SetupCloseHandler()
 	go func() {
 		for {
 			for i, core := range cpuCores {
@@ -72,13 +68,13 @@ func WatchFrequency(interval int) {
 				cpuFreq[i] = strings.ReplaceAll(string(freq), "\n", "")
 			}
 			wg.Done()
-			time.Sleep(time.Second)
+			time.Sleep(time.Second * time.Duration(interval))
 		}
 	}()
 	for {
 		wg.Wait()
-		ClearTerm()
-		fmt.Printf("Total CPUs: %v\n", len(cpuCores))
+		utils.ClearTerm()
+		fmt.Printf("Total CPUs: %v\t(%v seconds)\n", len(cpuCores), interval)
 		var fStringCpu string
 		for i, cpuCore := range cpuCores {
 			var cpu string = cpuCore + ":  " + cpuFreq[i]
@@ -91,20 +87,4 @@ func WatchFrequency(interval int) {
 		fmt.Println(fStringCpu)
 		wg.Add(1)
 	}
-}
-
-func ClearTerm() {
-	cmd := exec.Command("clear")
-	cmd.Stdout = os.Stdout
-	cmd.Run()
-}
-
-func SetupCloseHandler() {
-	c := make(chan os.Signal)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	go func() {
-		<-c
-		fmt.Println("\rCtrl+C pressed, exiting real time frequency watch")
-		os.Exit(0)
-	}()
 }
