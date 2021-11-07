@@ -1,11 +1,29 @@
 # gocpu
 
-A simple cli tool to handle and watch your CPU
+A simple cli tool to handle and watch your CPU.
 
 <br />
 
-## Todo
+## Usage
+```txt
+Usage gocpu [subcommand] [flags]
+subcommand:
+    watch   -   see the realtime cpu frequency, updated at 2 seconds by default, 
+                can be changed using the "--int" flag.
 
-- [x] Real Time CPU usage from frequency files in linux `/sys/devices/system/cpu/cpu[0-9]*/cpufreq/scaling_cur_freq`
-- [x] CPU governor changing: all governors `/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors`
-- [x] disable/enable turbo boost through file control: `/sys/devices/system/cpu/intel_pstate/no_turbo`
+    turbo   -   sets the turbo on/off depending on the "--enable" flag.
+
+    govern  -   lets you interactively select the cpu governor out the all the 
+                available governors.
+
+flags:
+    --int   -   used with watch subcommand, value is treated a number of seconds 
+                between refreshes
+    --enable-   used with turbo subcommand, if passed turbo mode will be enabled 
+                else turbo mode will be disabled
+```
+
+<br />
+
+## Issues
+If you find any bugs/improvements/feature requests please open them [here](https://github.com/sarthakpranesh/gocpu/issues)

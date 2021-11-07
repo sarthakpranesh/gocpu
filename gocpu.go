@@ -3,8 +3,8 @@ package main
 import (
 	"Github/sarthakpranesh/gocpu/commands"
 	"Github/sarthakpranesh/gocpu/utils"
+	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 )
 
@@ -43,5 +43,5 @@ func main() {
 	}
 
 	usage, _ := ioutil.ReadFile("usage.txt")
-	log.Fatalln(string(usage))
+	fmt.Println(string(usage))
 }
