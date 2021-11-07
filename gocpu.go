@@ -24,6 +24,11 @@ func main() {
 			},
 			commands.TurboSet,
 		),
+		utils.NewSubCommand(
+			"govern",
+			func(s *utils.Subcommand) {},
+			commands.Governor,
+		),
 	}
 
 	if len(os.Args) > 1 {
