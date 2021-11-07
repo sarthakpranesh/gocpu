@@ -1,8 +1,9 @@
 package commands
 
 import (
-	"Github/sarthakpranesh/gocpu/utils"
 	"fmt"
+
+	"github.com/sarthakpranesh/gocpu/utils"
 )
 
 func TurboSet(s *utils.Subcommand) {

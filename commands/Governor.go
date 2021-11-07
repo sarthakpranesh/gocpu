@@ -1,12 +1,13 @@
 package commands
 
 import (
-	"Github/sarthakpranesh/gocpu/utils"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"strconv"
 	"strings"
+
+	"github.com/sarthakpranesh/gocpu/utils"
 )
 
 func Governor(s *utils.Subcommand) {

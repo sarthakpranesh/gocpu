@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"Github/sarthakpranesh/gocpu/utils"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -9,6 +8,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/sarthakpranesh/gocpu/utils"
 )
 
 func WatchFrequency(s *utils.Subcommand) {

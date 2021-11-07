@@ -1,11 +1,12 @@
 package main
 
 import (
-	"Github/sarthakpranesh/gocpu/commands"
-	"Github/sarthakpranesh/gocpu/utils"
 	"fmt"
 	"io/ioutil"
 	"os"
+
+	"github.com/sarthakpranesh/gocpu/commands"
+	"github.com/sarthakpranesh/gocpu/utils"
 )
 
 func main() {
