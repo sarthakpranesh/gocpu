@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
 	"os"
 
 	"github.com/sarthakpranesh/gocpu/commands"
@@ -14,14 +12,14 @@ func main() {
 		utils.NewSubCommand(
 			"watch",
 			func(s *utils.Subcommand) {
-				s.Fs.IntVar(&s.Interval, "int", 2, "Usage --int: takes integer value for updating cpu freqency value")
+				s.Fs.IntVar(&s.Interval, "int", 2, "Takes integer value for updating cpu freqency value")
 			},
 			commands.WatchFrequency,
 		),
 		utils.NewSubCommand(
 			"turbo",
 			func(s *utils.Subcommand) {
-				s.Fs.BoolVar(&s.Turbo, "enable", false, "Usage --enable: If not passed, turbo boost will be disabled")
+				s.Fs.BoolVar(&s.Turbo, "enable", false, "If not passed, turbo boost will be disabled")
 			},
 			commands.TurboSet,
 		),
@@ -43,6 +41,5 @@ func main() {
 		}
 	}
 
-	usage, _ := ioutil.ReadFile("usage.txt")
-	fmt.Println(string(usage))
+	utils.Help(cmds)
 }

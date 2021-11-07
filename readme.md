@@ -9,9 +9,9 @@ A simple cli tool to handle and watch your CPU.
 Usage gocpu [subcommand] [flags]
 subcommand:
     watch   -   see the realtime cpu frequency, updated at 2 seconds by default, 
-                can be changed using the "--int" flag.
+                can be changed using the -int flag.
 
-    turbo   -   sets the turbo on/off depending on the "--enable" flag.
+    turbo   -   sets the turbo on/off depending on the -enable flag.
 
     govern  -   lets you interactively select the cpu governor out the all the 
                 available governors.
