@@ -1,6 +1,6 @@
 # gocpu
 
-A simple cli tool to handle and watch your CPU.
+A simple cli tool to handle and watch your CPU. This is WIP!
 
 <br />
 
