@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -30,9 +31,11 @@ func WatchFrequency(s *utils.Subcommand) {
 		}
 	}
 	var cpuFreq []string = make([]string, len(cpuCores))
+	var noTurboState int64
 	var wg sync.WaitGroup
-	wg.Add(1)
+	wg.Add(2)
 	utils.SetupCloseHandler()
+	// For cpu frequency
 	go func() {
 		for {
 			for i, core := range cpuCores {
@@ -47,10 +50,28 @@ func WatchFrequency(s *utils.Subcommand) {
 			time.Sleep(time.Second * time.Duration(interval))
 		}
 	}()
+	// For turbo enable/disable
+	go func() {
+		var noTurboFile string = "/sys/devices/system/cpu/intel_pstate/no_turbo"
+		for {
+			noTurboStateByte, err := ioutil.ReadFile(noTurboFile)
+			if err != nil {
+				noTurboStateByte = []byte("2")
+			}
+			noTurboStr := strings.ReplaceAll(string(noTurboStateByte), "\n", "")
+			noTurboState, err = strconv.ParseInt(noTurboStr, 10, 64)
+			if err != nil {
+				noTurboState = 2
+			}
+			wg.Done()
+			time.Sleep(time.Second * time.Duration(interval))
+		}
+	}()
 	for {
 		wg.Wait()
 		utils.ClearTerm()
 		fmt.Printf("Total CPUs: %v\t(%v seconds)\n", len(cpuCores), interval)
+		fmt.Printf("Turbo Enabled: %v\t(%v no turbo)\n", noTurboState == 0, noTurboState) // turbo enabled if noTurbo is set to 0
 		var fStringCpu string
 		for i, cpuCore := range cpuCores {
 			var cpu string = cpuCore + ":  " + cpuFreq[i]
@@ -61,6 +82,6 @@ func WatchFrequency(s *utils.Subcommand) {
 			}
 		}
 		fmt.Println(fStringCpu)
-		wg.Add(1)
+		wg.Add(2)
 	}
 }
